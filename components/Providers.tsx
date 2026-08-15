@@ -1,11 +1,12 @@
 'use client'
-import Providers from './Providers'
+
+import { SessionProvider } from 'next-auth/react'
 import { WatchlistProvider } from './WatchlistContext'
 
-export default function ProvidersWrapper({ children }: { children: React.ReactNode }) {
+export default function Providers({ children, session }: { children: React.ReactNode; session?: any }) {
   return (
-    <Providers>
+    <SessionProvider session={session}>
       <WatchlistProvider>{children}</WatchlistProvider>
-    </Providers>
+    </SessionProvider>
   )
 }
