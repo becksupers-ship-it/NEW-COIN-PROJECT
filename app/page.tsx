@@ -4,6 +4,7 @@ import axios from 'axios'
 import Sparkline from '../components/Sparkline'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useWatchlist } from '../components/WatchlistContext'
 
 const fetcher = (url: string) => axios.get(url).then((r) => r.data)
 
@@ -12,6 +13,7 @@ export default function HomePage() {
   const [q, setQ] = useState('')
   const url = `/api/coins/markets?page=${page}`
   const { data: coins, error } = useSWR(url, fetcher)
+  const { ids, add, remove } = useWatchlist()
 
   const filtered = (coins || []).filter((c: any) => `${c.name} ${c.symbol}`.toLowerCase().includes(q.toLowerCase()))
 
@@ -35,6 +37,7 @@ export default function HomePage() {
             <th>24h</th>
             <th>Market Cap</th>
             <th>Sparkline</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -58,6 +61,13 @@ export default function HomePage() {
               <td>${c.market_cap.toLocaleString()}</td>
               <td style={{ width: 120 }}>
                 <Sparkline data={c.sparkline_in_7d.price} positive={c.price_change_percentage_24h >= 0} />
+              </td>
+              <td>
+                {!ids.includes(c.id) ? (
+                  <button onClick={() => add(c.id)} className="px-2 py-1 border rounded">Add</button>
+                ) : (
+                  <button onClick={() => remove(c.id)} className="px-2 py-1 border rounded">Remove</button>
+                )}
               </td>
             </tr>
           ))}

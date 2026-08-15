@@ -4,10 +4,28 @@ import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 export default function AlertsPage() {
-  const { alerts, add, remove } = useAlerts()
+  const { alerts, add, remove, update } = useAlerts()
   const [coin, setCoin] = useState('bitcoin')
   const [price, setPrice] = useState('')
   const [condition, setCondition] = useState<'above'|'below'>('below')
+  const [editingId, setEditingId] = useState<string | null>(null)
+
+  function startEdit(a: any) {
+    setEditingId(a.id)
+    setCoin(a.coinId)
+    setPrice(String(a.targetPrice))
+    setCondition(a.condition)
+  }
+
+  function save() {
+    if (editingId) {
+      update(editingId, { coinId: coin, targetPrice: Number(price), condition })
+      setEditingId(null)
+    } else {
+      add({ id: uuidv4(), coinId: coin, targetPrice: Number(price), condition })
+    }
+    setPrice('')
+  }
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-6">
@@ -29,7 +47,8 @@ export default function AlertsPage() {
           <input value={price} onChange={(e) => setPrice(e.target.value)} className="border px-2 py-1" />
         </div>
         <div>
-          <button onClick={() => { add({ id: uuidv4(), coinId: coin, targetPrice: Number(price), condition }); setPrice('') }} className="px-3 py-1 border rounded">Create Alert</button>
+          <button onClick={save} className="px-3 py-1 border rounded">{editingId ? 'Save' : 'Create Alert'}</button>
+          {editingId && <button onClick={() => { setEditingId(null); setPrice('') }} className="ml-2 px-3 py-1 border rounded">Cancel</button>}
         </div>
       </div>
 
@@ -40,7 +59,10 @@ export default function AlertsPage() {
             {alerts.map((a: any) => (
               <li key={a.id} className="flex items-center justify-between border-b py-2">
                 <div>{a.coinId} - {a.condition} ${a.targetPrice}</div>
-                <button onClick={() => remove(a.id)} className="px-2 py-1 border rounded">Remove</button>
+                <div className="flex gap-2">
+                  <button onClick={() => startEdit(a)} className="px-2 py-1 border rounded">Edit</button>
+                  <button onClick={() => remove(a.id)} className="px-2 py-1 border rounded">Remove</button>
+                </div>
               </li>
             ))}
           </ul>
