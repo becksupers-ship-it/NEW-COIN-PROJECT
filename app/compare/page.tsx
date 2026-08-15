@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
-import PriceChart from '../../components/PriceChart'
+import CompareChart from '../../components/CompareChart'
 
 const fetcher = (url: string) => axios.get(url).then((r) => r.data)
 
@@ -12,6 +12,8 @@ export default function ComparePage() {
   const charts = ids.map((id) => useSWR(`/api/coins/${id}/market_chart?days=30`, fetcher))
 
   const allLoaded = charts.every((c) => c.data)
+
+  const datasets = charts.map((c, i) => ({ id: ids[i], prices: c.data ? c.data.prices : [] }))
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-6">
@@ -26,13 +28,8 @@ export default function ComparePage() {
       {!allLoaded && <div>Loading charts…</div>}
 
       {allLoaded && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {charts.map((c, i) => (
-            <div key={i} className="border p-4">
-              <h3 className="font-semibold mb-2">{ids[i]}</h3>
-              <PriceChart prices={c.data.prices} />
-            </div>
-          ))}
+        <div className="border p-4">
+          <CompareChart datasets={datasets} />
         </div>
       )}
     </main>
