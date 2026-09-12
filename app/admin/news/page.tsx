@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { ArrowLeft, Plus } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { auth } from '@/lib/auth'
-export const dynamic='force-dynamic'
-export default async function NewsManager(){const s=await auth.api.getSession({headers:await headers()});if(!s?.user)redirect('/admin/login');return <main className="min-h-screen bg-[#f3f6f1] px-5 py-10 text-[#17332d] lg:px-10"><div className="mx-auto max-w-6xl"><Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#c56b4b]"><ArrowLeft size={16}/> Dashboard</Link><div className="mt-10 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-widest text-[#c56b4b]">News manager</p><h1 className="mt-2 text-4xl font-semibold">News & events</h1><p className="mt-2 text-sm text-[#64776e]">Write, schedule, and publish public updates.</p></div><button className="inline-flex items-center gap-2 rounded-full bg-[#c56b4b] px-5 py-3 text-sm font-bold text-white"><Plus size={16}/> New post</button></div><div className="mt-8 rounded-[2rem] bg-white p-10 text-center"><p className="text-lg font-semibold">No posts yet.</p><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#64776e]">Create news articles and event announcements with featured images and rich content.</p></div></div></main>}
+import { getAdminPosts } from '@/app/actions/content'
+import { ContentManager } from '@/components/content-manager'
+
+export const dynamic = 'force-dynamic'
+export default async function NewsManager() { const session = await auth.api.getSession({ headers: await headers() }); if (!session?.user) redirect('/admin/login'); const posts = await getAdminPosts(); return <main className="min-h-screen bg-[#f3f6f1] px-5 py-10 text-[#17332d] lg:px-10"><div className="mx-auto max-w-6xl"><Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#c56b4b]"><ArrowLeft size={16}/> Dashboard</Link><h1 className="mt-10 text-4xl font-semibold">News & events</h1><p className="mt-2 text-sm text-[#64776e]">Create announcements and events for the public site.</p><ContentManager mode="news"/><div className="mt-8 grid gap-3">{posts.map((post) => <div key={post.id} className="rounded-2xl bg-white p-5"><p className="font-bold">{post.title}</p><p className="text-sm text-[#64776e]">{post.type} · {post.published ? 'Published' : 'Draft'}</p></div>)}</div></div></main> }
