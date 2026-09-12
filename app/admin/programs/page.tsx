@@ -1,19 +1,8 @@
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { Plus, ArrowLeft, ImagePlus } from 'lucide-react'
 import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { programs } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
-import { AdminProgramManager } from '@/components/admin-program-manager'
-
-export const dynamic = 'force-dynamic'
-
-export default async function ProgramsManager() {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session?.user) redirect('/admin/login')
-  const items = await db.select({ id: programs.id, title: programs.title, category: programs.category, summary: programs.summary, description: programs.description, imageUrl: programs.imageUrl, status: programs.status }).from(programs).orderBy(desc(programs.updatedAt))
-
-  return <main className="min-h-screen bg-[#f3f6f1] px-5 py-8 text-[#17332d] lg:px-10"><div className="mx-auto max-w-7xl"><Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#c56b4b]"><ArrowLeft size={16} /> Dashboard</Link><div className="mt-10"><p className="text-xs font-bold uppercase tracking-widest text-[#c56b4b]">Program manager</p><h1 className="mt-2 text-4xl font-semibold">Your programs</h1><p className="mt-2 text-sm text-[#64776e]">Create, edit, publish, and archive outreach programs.</p></div><div className="mt-8"><AdminProgramManager initialPrograms={items} /></div></div></main>
-}
+export const dynamic='force-dynamic'
+const examples=[['Widow Empowerment','Livelihoods','Micro-grants and skills training for widows.','Active'],['Back-to-School Programme','Education','Supplies, fees, and mentorship for children.','Active'],['Elderly Care & Support','Care','Companionship and practical support for older people.','Past']]
+export default async function ProgramsManager(){const session=await auth.api.getSession({headers:await headers()});if(!session?.user)redirect('/admin/login');return <main className="min-h-screen bg-[#f3f6f1] px-5 py-8 text-[#17332d] lg:px-10"><div className="mx-auto max-w-7xl"><Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#c56b4b]"><ArrowLeft size={16}/> Dashboard</Link><div className="mt-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs font-bold uppercase tracking-widest text-[#c56b4b]">Program manager</p><h1 className="mt-2 text-4xl font-semibold">Your programs</h1><p className="mt-2 text-sm text-[#64776e]">Create, edit, publish, and archive outreach programs.</p></div><button className="inline-flex items-center justify-center gap-2 rounded-full bg-[#c56b4b] px-5 py-3 text-sm font-bold text-white"><Plus size={17}/> Add program</button></div><div className="mt-8 overflow-hidden rounded-[2rem] bg-white shadow-sm"><div className="hidden grid-cols-[1fr_1fr_2fr_100px] gap-4 border-b border-[#d9e1d8] px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#789086] md:grid"><span>Program</span><span>Category</span><span>Summary</span><span>Status</span></div>{examples.map(([title,category,summary,status])=><div key={title} className="grid gap-3 border-b border-[#edf1eb] px-6 py-6 md:grid-cols-[1fr_1fr_2fr_100px] md:items-center"><div><p className="font-semibold">{title}</p><p className="mt-1 text-xs text-[#789086]">Updated recently</p></div><p className="text-sm text-[#64776e]">{category}</p><p className="text-sm leading-6 text-[#64776e]">{summary}</p><span className={'w-fit rounded-full px-3 py-1 text-xs font-bold '+(status==='Active'?'bg-[#dce8da] text-[#4d7164]':'bg-[#f1eee5] text-[#897a5c]')}>{status}</span></div>)}</div><div className="mt-6 rounded-2xl border border-dashed border-[#b9c9bd] p-6 text-center text-sm text-[#64776e]"><ImagePlus className="mx-auto text-[#c56b4b]"/><p className="mt-3">Upload program images through the media library.</p></div></div></main>}
