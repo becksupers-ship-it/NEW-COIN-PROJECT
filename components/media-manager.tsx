@@ -15,7 +15,7 @@ export function MediaManager({ initialAssets }: { initialAssets: Asset[] }) {
   async function upload(file: File) {
     const extension = file.name.split('.').pop()?.toLowerCase() ?? ''
     const supported = ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif', 'avif', 'dng'].includes(extension) || file.type.startsWith('image/')
-    if (file.size > 10 * 1024 * 1024 || !supported) { setMessage('Choose a JPG, JPEG, PNG, WebP, HEIC, HEIF, AVIF, or DNG image under 10MB.'); return }
+    if (!supported) { setMessage('Choose a JPG, JPEG, PNG, WebP, HEIC, HEIF, AVIF, or DNG image.'); return }
     setBusy(true); setMessage('Uploading image…')
     const data = new FormData(); data.append('file', file)
     const response = await fetch('/api/upload', { method: 'POST', body: data })
