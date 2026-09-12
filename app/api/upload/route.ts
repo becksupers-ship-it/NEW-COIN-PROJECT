@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
     if (file.size > 10 * 1024 * 1024) return NextResponse.json({ error: isDonationReceipt ? 'Receipts must be 10MB or smaller.' : 'Images must be 10MB or smaller.' }, { status: 400 })
     const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').slice(-120)
     const folder = uploadType === 'program-image' ? 'bonded-friends/programs' : uploadType === 'member-image' ? 'bonded-friends/members' : isDonationReceipt ? 'bonded-friends/donation-receipts' : 'bonded-friends'
-    const blob = await put(`${folder}/${Date.now()}-${crypto.randomUUID()}-${filename}`, file, { access: 'public', addRandomSuffix: false })
-    return NextResponse.json({ url: blob.url })
+    const blob = await put(`${folder}/${Date.now()}-${crypto.randomUUID()}-${filename}`, file, { access: 'private', addRandomSuffix: false })
+    return NextResponse.json({ url: `/api/file?pathname=${encodeURIComponent(blob.pathname)}`, pathname: blob.pathname })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown upload error'
     console.error('[v0] Upload failed:', message)
