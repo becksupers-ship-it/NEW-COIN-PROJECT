@@ -6,7 +6,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useState } from 'react'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1782209731991-EKxLV5AyT7x7k2tBqH92aOk48KUSEz.png'
-const nav = [['About us','/about'],['Programs','/programs'],['Impact stories','/stories'],['News & events','/news']]
+const nav = [['About us','/about'],['Programs','/programs'],['Verified members','/verified-members'],['Impact stories','/stories'],['News & events','/news']]
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
@@ -18,7 +18,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <div className="flex items-center gap-2"><button onClick={() => setDark(!dark)} aria-label="Toggle theme" className="grid h-10 w-10 place-items-center rounded-full border border-[#cbd8cc]">{dark ? <Sun size={17} /> : <Moon size={17} />}</button><Link href="/donate" className="hidden rounded-full bg-[#c56b4b] px-5 py-3 text-sm font-bold text-white sm:block">Donate now</Link><button onClick={() => setOpen(!open)} aria-label="Toggle menu" className="grid h-10 w-10 place-items-center rounded-full border border-[#cbd8cc] lg:hidden">{open ? <X size={18} /> : <Menu size={18} />}</button></div>
     </div>{open && <nav className="flex flex-col gap-4 border-t border-[#d9e1d8] px-5 py-5 lg:hidden">{nav.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)}>{label}</Link>)}<Link href="/donate" className="font-bold text-[#c56b4b]">Donate now</Link><Link href="/volunteer">Become a volunteer</Link></nav>}</header>
     {children}
-    <footer className="border-t border-[#d9e1d8] px-5 py-12 dark:border-[#2d4942]"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 text-sm text-[#667870] sm:flex-row"><div><p className="font-bold text-[#17332d] dark:text-[#f7f4eb]">Bonded Friends Outreach Initiative</p><p className="mt-2">No one should walk alone.</p></div><div className="flex flex-wrap gap-5"><Link href="/about">About</Link><Link href="/news">News</Link><Link href="/volunteer">Volunteer</Link><Link href="/admin/login">Admin portal</Link></div></div></footer>
+    <footer className="border-t border-[#d9e1d8] px-5 py-12 dark:border-[#2d4942]"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 text-sm text-[#667870] sm:flex-row"><div><p className="font-bold text-[#17332d] dark:text-[#f7f4eb]">Bonded Friends Outreach Initiative</p><p className="mt-2">No one should walk alone.</p><a href="mailto:bondedfriendsoutreachinitiativ@gmail.com" className="mt-3 inline-block font-medium text-[#17332d] underline decoration-[#c56b4b] underline-offset-4 dark:text-[#f7f4eb]">bondedfriendsoutreachinitiativ@gmail.com</a></div><div className="flex flex-wrap gap-5"><Link href="/about">About</Link><Link href="/news">News</Link><Link href="/volunteer">Volunteer</Link><Link href="/admin/login">Admin portal</Link></div></div></footer>
   </div>
 }
 
