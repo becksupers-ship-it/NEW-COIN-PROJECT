@@ -32,8 +32,8 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
       const data = new FormData()
       data.append('file', file)
       data.append('type', 'program-image')
-      const response = await fetch('/api/upload', { method: 'POST', body: data })
-      const result = await response.json()
+      const response = await fetch('/api/upload', { method: 'POST', body: data, credentials: 'same-origin', cache: 'no-store' })
+      const result = await response.json().catch(() => ({ error: 'The upload service returned an invalid response.' }))
       if (!response.ok) throw new Error(result.error || 'Unable to upload image')
       setForm((current) => ({ ...current, imageUrl: result.url }))
     } catch (error) {
