@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     if (!allowedTypes.includes(file.type)) return NextResponse.json({ error: isDonationReceipt ? 'Only JPG, PNG, WebP, or PDF receipts are supported.' : 'Only JPG, PNG, and WebP images are supported.' }, { status: 400 })
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: isDonationReceipt ? 'Receipts must be 5MB or smaller.' : 'Images must be 5MB or smaller.' }, { status: 400 })
     const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').slice(-120)
-    const folder = uploadType === 'program-image' ? 'bonded-friends/programs' : isDonationReceipt ? 'bonded-friends/donation-receipts' : 'bonded-friends'
+    const folder = uploadType === 'program-image' ? 'bonded-friends/programs' : uploadType === 'member-image' ? 'bonded-friends/members' : isDonationReceipt ? 'bonded-friends/donation-receipts' : 'bonded-friends'
     const blob = await put(`${folder}/${Date.now()}-${filename}`, file, { access: 'public' })
     return NextResponse.json({ url: blob.url })
   } catch (error) {

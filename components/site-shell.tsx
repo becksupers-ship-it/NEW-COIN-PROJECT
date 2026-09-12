@@ -6,7 +6,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useState } from 'react'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1782209731991-EKxLV5AyT7x7k2tBqH92aOk48KUSEz.png'
-const nav = [['About us','/about'],['Programs','/programs'],['Impact stories','/stories'],['News & events','/news']]
+const nav = [['About us','/about'],['Programs','/programs'],['Verified members','/verified-members'],['Impact stories','/stories'],['News & events','/news']]
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
