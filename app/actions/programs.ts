@@ -27,6 +27,10 @@ function normalize(input: { title: string; category: string; summary: string; de
   return { title, category, summary, description, imageUrl, slug }
 }
 
+export async function getPublishedPrograms() {
+  return db.select().from(programs).where(eq(programs.status, 'published'))
+}
+
 export async function createProgram(input: { title: string; category: string; summary: string; description: string; imageUrl?: string }) {
   await requireAdmin()
   const values = normalize(input)
