@@ -78,7 +78,7 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
         {([['title','Program title'],['category','Category'],['summary','Short summary']] as const).map(([key, label]) => <label key={key} className="grid gap-2 text-sm font-semibold">{label}<input value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} className="rounded-xl border border-[#cbd8cc] bg-white px-4 py-3 font-normal outline-none focus:border-[#c56b4b]" /></label>)}
         <div className="grid gap-2 text-sm font-semibold sm:col-span-2">
           <span>Program picture</span>
-          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} />
+          <input ref={fileInputRef} type="file" accept="image/*,.heic,.heif,.avif" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} />
           <button type="button" disabled={uploading} onClick={() => fileInputRef.current?.click()} className="rounded-xl border border-dashed border-[#c56b4b] bg-[#fff8f2] px-4 py-4 text-left font-semibold text-[#a94f37] disabled:opacity-60">{uploading ? 'Uploading picture…' : form.imageUrl ? 'Replace picture from gallery' : 'Choose picture from phone gallery'}</button>
           {form.imageUrl && <img src={form.imageUrl} alt="Selected program preview" className="h-44 w-full rounded-xl object-cover" />}
         </div>
