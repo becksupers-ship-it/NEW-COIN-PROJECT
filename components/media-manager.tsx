@@ -13,7 +13,9 @@ export function MediaManager({ initialAssets }: { initialAssets: Asset[] }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   async function upload(file: File) {
-    if (file.size > 5 * 1024 * 1024 || !file.type.startsWith('image/')) { setMessage('Choose an image under 5MB.'); return }
+    const extension = file.name.split('.').pop()?.toLowerCase() ?? ''
+    const supported = ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif', 'avif', 'dng'].includes(extension) || file.type.startsWith('image/')
+    if (file.size > 10 * 1024 * 1024 || !supported) { setMessage('Choose a JPG, JPEG, PNG, WebP, HEIC, HEIF, AVIF, or DNG image under 10MB.'); return }
     setBusy(true); setMessage('Uploading image…')
     const data = new FormData(); data.append('file', file)
     const response = await fetch('/api/upload', { method: 'POST', body: data })
@@ -37,7 +39,7 @@ export function MediaManager({ initialAssets }: { initialAssets: Asset[] }) {
     <form onSubmit={save} className="rounded-[2rem] bg-white p-6 shadow-sm">
       <h2 className="text-2xl font-semibold">{editing ? 'Edit gallery item' : 'Add gallery item'}</h2>
       <p className="mt-2 text-sm text-[#64776e]">Upload a photo, then add the words visitors should read with it.</p>
-      <label className="mt-6 block text-sm font-bold">Image<input className="mt-2 block w-full rounded-2xl border border-[#cbd8ce] p-3 text-sm" type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file) }} /></label>
+      <label className="mt-6 block text-sm font-bold">Image<input className="mt-2 block w-full rounded-2xl border border-[#cbd8ce] p-3 text-sm" type="file" accept="image/*,.jpg,.jpeg,.heic,.heif,.avif,.dng,.png,.webp" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file) }} /></label>
       {form.url && <img src={form.url} alt="Selected gallery preview" className="mt-4 aspect-video w-full rounded-2xl object-cover" />}
       <label className="mt-5 block text-sm font-bold">Title<input required value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} className="mt-2 w-full rounded-2xl border border-[#cbd8ce] p-3" placeholder="A day of care in Abuja" /></label>
       <label className="mt-5 block text-sm font-bold">Write-up<textarea required value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="mt-2 min-h-32 w-full rounded-2xl border border-[#cbd8ce] p-3" placeholder="Tell the story behind this image…" /></label>

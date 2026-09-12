@@ -32,8 +32,8 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
       const data = new FormData()
       data.append('file', file)
       data.append('type', 'program-image')
-      const response = await fetch('/api/upload', { method: 'POST', body: data })
-      const result = await response.json()
+      const response = await fetch('/api/upload', { method: 'POST', body: data, credentials: 'same-origin', cache: 'no-store' })
+      const result = await response.json().catch(() => ({ error: 'The upload service returned an invalid response.' }))
       if (!response.ok) throw new Error(result.error || 'Unable to upload image')
       setForm((current) => ({ ...current, imageUrl: result.url }))
     } catch (error) {
@@ -78,7 +78,7 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
         {([['title','Program title'],['category','Category'],['summary','Short summary']] as const).map(([key, label]) => <label key={key} className="grid gap-2 text-sm font-semibold">{label}<input value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} className="rounded-xl border border-[#cbd8cc] bg-white px-4 py-3 font-normal outline-none focus:border-[#c56b4b]" /></label>)}
         <div className="grid gap-2 text-sm font-semibold sm:col-span-2">
           <span>Program picture</span>
-          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} />
+          <input ref={fileInputRef} type="file" accept="image/*,.jpg,.jpeg,.heic,.heif,.avif,.dng,.png,.webp" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} />
           <button type="button" disabled={uploading} onClick={() => fileInputRef.current?.click()} className="rounded-xl border border-dashed border-[#c56b4b] bg-[#fff8f2] px-4 py-4 text-left font-semibold text-[#a94f37] disabled:opacity-60">{uploading ? 'Uploading picture…' : form.imageUrl ? 'Replace picture from gallery' : 'Choose picture from phone gallery'}</button>
           {form.imageUrl && <img src={form.imageUrl} alt="Selected program preview" className="h-44 w-full rounded-xl object-cover" />}
         </div>
