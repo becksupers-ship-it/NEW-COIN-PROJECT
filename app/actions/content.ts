@@ -17,6 +17,8 @@ const clean = (value: string) => value.trim().replace(/[<>]/g, '')
 
 export async function createStory(input: { name: string; location: string; quote: string; category: string; imageUrl?: string; videoUrl?: string; rating: number; published: boolean }) {
   await requireAdmin()
+  const required = [input.name, input.location, input.quote, input.category]
+  if (required.some((value) => !value?.trim())) throw new Error('Name, location, category, and quote are required.')
   const id = randomUUID()
   await db.insert(impactStories).values({ id, name: clean(input.name), location: clean(input.location), quote: clean(input.quote), category: clean(input.category), imageUrl: input.imageUrl?.trim() || null, videoUrl: input.videoUrl?.trim() || null, rating: Math.min(5, Math.max(1, Math.round(input.rating))), published: input.published })
   revalidatePath('/'); revalidatePath('/stories')
@@ -25,7 +27,9 @@ export async function createStory(input: { name: string; location: string; quote
 
 export async function createPost(input: { title: string; slug: string; type: string; excerpt: string; content: string; imageUrl?: string; published: boolean }) {
   await requireAdmin()
+  if ([input.title, input.slug, input.type, input.excerpt, input.content].some((value) => !value?.trim())) throw new Error('Title, slug, type, excerpt, and content are required.')
   const slug = clean(input.slug).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  if (!slug) throw new Error('Enter a valid URL slug.')
   await db.insert(posts).values({ id: randomUUID(), slug, title: clean(input.title), type: clean(input.type), excerpt: clean(input.excerpt), content: input.content.trim(), imageUrl: input.imageUrl?.trim() || null, published: input.published, publishedAt: new Date() })
   revalidatePath('/'); revalidatePath('/news')
   return { ok: true }

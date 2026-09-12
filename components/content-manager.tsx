@@ -31,7 +31,9 @@ export function ContentManager({ mode }: { mode: Mode }) {
     }
   }
 
-  async function submit(formData: FormData) {
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
     setBusy(true)
     setMessage('')
     try {
@@ -59,7 +61,8 @@ export function ContentManager({ mode }: { mode: Mode }) {
       }
       setImageUrl('')
       setMessage(mode === 'stories' ? 'Story saved. Published stories are now visible on the public site.' : 'Post saved and published settings updated.')
-      ;(document.querySelector('form') as HTMLFormElement | null)?.reset()
+      event.currentTarget.reset()
+      setPublished(true)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to save.')
     } finally {
@@ -67,7 +70,7 @@ export function ContentManager({ mode }: { mode: Mode }) {
     }
   }
 
-  return <form action={submit} className="mt-8 grid gap-4 rounded-[2rem] border border-[#d9e1d8] bg-white p-6 shadow-sm">
+  return <form onSubmit={submit} className="mt-8 grid gap-4 rounded-[2rem] border border-[#d9e1d8] bg-white p-6 shadow-sm">
     {mode === 'stories' ? <>
       <label className="grid gap-2 text-sm font-bold">Beneficiary name<input name="name" required className="rounded-xl border border-[#cbd8cc] p-3 font-normal" /></label>
       <label className="grid gap-2 text-sm font-bold">Location<input name="location" required className="rounded-xl border border-[#cbd8cc] p-3 font-normal" /></label>
