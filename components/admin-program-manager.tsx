@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Archive, Check, Edit3, Eye, Plus, Save, X } from 'lucide-react'
 import { createProgram, deleteProgram, updateProgram, updateProgramStatus } from '@/app/actions/programs'
 
@@ -15,12 +15,32 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   function edit(program: Program) {
     setEditingId(program.id)
     setForm({ title: program.title, category: program.category, summary: program.summary, description: program.description, imageUrl: program.imageUrl ?? '' })
     setOpen(true)
     setMessage('')
+  }
+
+  async function uploadImage(file: File) {
+    setUploading(true)
+    setMessage('')
+    try {
+      const data = new FormData()
+      data.append('file', file)
+      data.append('type', 'program-image')
+      const response = await fetch('/api/upload', { method: 'POST', body: data })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Unable to upload image')
+      setForm((current) => ({ ...current, imageUrl: result.url }))
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to upload image')
+    } finally {
+      setUploading(false)
+    }
   }
 
   async function save() {
@@ -55,7 +75,13 @@ export function AdminProgramManager({ initialPrograms }: { initialPrograms: Prog
     {open && <section className="mb-8 rounded-[1.5rem] border border-[#d9e1d8] bg-[#fffdf8] p-5 shadow-sm">
       <div className="flex items-center justify-between"><h2 className="text-xl font-semibold">{editingId ? 'Edit program' : 'Add program'}</h2><button onClick={() => setOpen(false)} aria-label="Close editor"><X /></button></div>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        {([['title','Program title'],['category','Category'],['summary','Short summary'],['imageUrl','Image URL']] as const).map(([key, label]) => <label key={key} className="grid gap-2 text-sm font-semibold">{label}<input value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} className="rounded-xl border border-[#cbd8cc] bg-white px-4 py-3 font-normal outline-none focus:border-[#c56b4b]" /></label>)}
+        {([['title','Program title'],['category','Category'],['summary','Short summary']] as const).map(([key, label]) => <label key={key} className="grid gap-2 text-sm font-semibold">{label}<input value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} className="rounded-xl border border-[#cbd8cc] bg-white px-4 py-3 font-normal outline-none focus:border-[#c56b4b]" /></label>)}
+        <div className="grid gap-2 text-sm font-semibold sm:col-span-2">
+          <span>Program picture</span>
+          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} />
+          <button type="button" disabled={uploading} onClick={() => fileInputRef.current?.click()} className="rounded-xl border border-dashed border-[#c56b4b] bg-[#fff8f2] px-4 py-4 text-left font-semibold text-[#a94f37] disabled:opacity-60">{uploading ? 'Uploading picture…' : form.imageUrl ? 'Replace picture from gallery' : 'Choose picture from phone gallery'}</button>
+          {form.imageUrl && <img src={form.imageUrl} alt="Selected program preview" className="h-44 w-full rounded-xl object-cover" />}
+        </div>
         <label className="grid gap-2 text-sm font-semibold sm:col-span-2">Full description<textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} rows={5} className="rounded-xl border border-[#cbd8cc] bg-white px-4 py-3 font-normal outline-none focus:border-[#c56b4b]" /></label>
       </div>
       <button disabled={busy} onClick={save} className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#c56b4b] px-5 py-3 text-sm font-bold text-white disabled:opacity-60"><Save size={16} /> {busy ? 'Saving…' : editingId ? 'Save changes' : 'Create draft'}</button>
