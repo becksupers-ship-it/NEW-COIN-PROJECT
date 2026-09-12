@@ -88,7 +88,7 @@ export function ContentManager({ mode }: { mode: Mode }) {
         <input ref={fileRef} type="file" accept="image/*,.jpg,.jpeg,.heic,.heif,.avif,.dng,.png,.webp" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} className="rounded-xl border border-[#cbd8cc] p-3 font-normal" />
       </label>
       {imageUrl && <img src={imageUrl} alt="Selected story preview" className="max-h-56 w-full rounded-2xl object-cover" />}
-      <p className="text-xs text-[#64776e]">Upload a JPG, JPEG, PNG, WebP, HEIC, HEIF, AVIF, or DNG image up to 10MB. It will appear with the story after publishing.</p>
+      <p className="text-xs text-[#64776e]">Upload a JPG, JPEG, PNG, WebP, HEIC, HEIF, AVIF, or DNG image of any size. It will appear with the story after publishing.</p>
       <label className="grid gap-2 text-sm font-bold">Video URL <input name="videoUrl" type="url" className="rounded-xl border border-[#cbd8cc] p-3 font-normal" /></label>
       <label className="grid gap-2 text-sm font-bold">Star rating <input name="rating" type="number" min="1" max="5" defaultValue="5" className="rounded-xl border border-[#cbd8cc] p-3 font-normal" /></label>
     </>}
