@@ -1,0 +1,5 @@
+import Link from 'next/link'
+
+export default function AboutPage() {
+  return <main className="min-h-screen bg-[#fbfaf6] px-5 py-16 text-[#17332d] lg:px-8"><div className="mx-auto max-w-5xl"><Link href="/" className="text-sm font-bold text-[#c56b4b]">← Back home</Link><p className="mt-16 text-xs font-bold uppercase tracking-[0.18em] text-[#c56b4b]">About us</p><h1 className="mt-3 max-w-3xl text-6xl font-semibold tracking-[-0.05em]">A community of friends, bonded by care.</h1><p className="mt-8 max-w-2xl text-xl leading-8 text-[#64776e]">Bonded Friends Outreach Initiative is a humanitarian organization committed to restoring dignity and creating opportunity for underserved people and communities across Nigeria.</p><div className="mt-16 grid gap-6 md:grid-cols-3">{['Our history','Our vision','Our mission'].map((item) => <section key={item} className="rounded-3xl bg-[#edf3eb] p-7"><h2 className="text-xl font-semibold">{item}</h2><p className="mt-3 text-sm leading-6 text-[#64776e]">Content managed by the Bonded Friends admin team, with stories and updates that keep our community close to the work.</p></section>)}</div></div></main>
+}

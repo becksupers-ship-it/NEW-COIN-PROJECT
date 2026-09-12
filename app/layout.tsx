@@ -1,19 +1,29 @@
+import { Analytics } from '@vercel/analytics/next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Inter } from 'next/font/google'
-import Providers from '../components/Providers'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Coin Hub - NEW COIN PROJECT',
-  description: 'Cryptocurrency market data and charts',
+export const metadata: Metadata = {
+  title: 'Bonded Friends Outreach Initiative | Hope made practical',
+  description: 'Bonded Friends Outreach Initiative walks alongside widows, children, older people, and communities across Nigeria.',
+  generator: 'v0.app',
+  icons: {
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1782209731991-EKxLV5AyT7x7k2tBqH92aOk48KUSEz.png',
+    apple: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1782209731991-EKxLV5AyT7x7k2tBqH92aOk48KUSEz.png',
+  },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const viewport: Viewport = {
+  colorScheme: 'light dark',
+  themeColor: '#fbfaf6',
+  userScalable: true,
+}
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.className}>
-      <body>
-        <Providers>{children}</Providers>
+    <html lang="en" className="bg-[#fbfaf6]">
+      <body className="antialiased">
+        {children}
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

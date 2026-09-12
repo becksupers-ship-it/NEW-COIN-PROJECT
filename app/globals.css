@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-muted-foreground: var(--muted-foreground);
+  --font-sans: var(--font-sans-family);
+  --font-serif: var(--font-serif-family);
+}
+
+:root {
+  --background: #fbfaf6;
+  --foreground: #17332d;
+  --card: #ffffff;
+  --card-foreground: #17332d;
+  --primary: #c56b4b;
+  --primary-foreground: #ffffff;
+  --border: #d9e1d8;
+  --muted-foreground: #64776e;
+  --font-sans-family: Arial, Helvetica, sans-serif;
+  --font-serif-family: Georgia, 'Times New Roman', serif;
+}
+
+.dark { --background: #12221f; --foreground: #f7f4eb; --card: #1b332e; --card-foreground: #f7f4eb; --border: #2d4942; --muted-foreground: #b4c2bb; }
+
+* { border-color: var(--border); }
+html { background: var(--background); scroll-behavior: smooth; }
+body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans-family); }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid #e5b65c; outline-offset: 3px; }
+::selection { background: #e5b65c; color: #17332d; }
