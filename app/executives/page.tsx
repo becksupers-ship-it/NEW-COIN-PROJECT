@@ -1,9 +1,9 @@
-import { getPublishedMembers } from '@/app/actions/members'
+import { getPublishedExecutives } from '@/app/actions/executives'
 import { PageIntro, SiteShell } from '@/components/site-shell'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ExecutivesPage() {
-  const executives = await getPublishedMembers()
+  const executives = await getPublishedExecutives()
   return <SiteShell><main><PageIntro eyebrow="Bonded Friends leadership" title="Meet the people serving with purpose." text="Learn about the administrators and disciplinary committee members helping Bonded Friends Outreach Initiative turn care into lasting community impact."/><section className="mx-auto grid max-w-7xl gap-6 px-5 pb-24 sm:grid-cols-2 lg:grid-cols-3 lg:px-8">{executives.length ? executives.map((executive) => <article key={executive.id} className="overflow-hidden rounded-[2rem] border border-[#d9e1d8] bg-white"><div className="aspect-[4/3] bg-[#e5b65c]">{executive.imageUrl ? <img src={executive.imageUrl} alt={executive.name} className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-7xl font-semibold text-[#17332d]">{executive.name.slice(0, 1)}</div>}</div><div className="p-6"><p className="text-xs font-bold uppercase tracking-[.18em] text-[#c56b4b]">{executive.office}</p><h2 className="mt-3 text-2xl font-semibold">{executive.name}</h2><p className="mt-2 font-medium text-[#64776e]">{executive.occupation}</p><dl className="mt-5 grid gap-3 text-sm leading-6"><div><dt className="font-bold">State of origin</dt><dd className="text-[#64776e]">{executive.stateOfOrigin}</dd></div><div><dt className="font-bold">Currently resident in</dt><dd className="text-[#64776e]">{executive.currentState}</dd></div><div><dt className="font-bold">Impact</dt><dd className="text-[#64776e]">{executive.impact}</dd></div><div><dt className="font-bold">Contributions</dt><dd className="text-[#64776e]">{executive.contribution}</dd></div></dl></div></article>) : <p className="rounded-3xl border border-dashed border-[#cbd8cc] p-8 text-[#64776e]">Executive profiles will appear here soon.</p>}</section></main></SiteShell>
 }
