@@ -16,9 +16,9 @@ export default async function SubmissionsManager() {
     <div className="mx-auto max-w-6xl">
       <Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#c56b4b]"><ArrowLeft size={16} /> Dashboard</Link>
       <div className="mt-10">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#c56b4b]">Submissions & public copy</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-[#c56b4b]">Live submission records</p>
         <h1 className="mt-2 text-4xl font-semibold">Donations & volunteers</h1>
-        <p className="mt-2 max-w-2xl text-sm text-[#64776e]">Review every donation confirmation and volunteer application submitted through the public website.</p>
+        <p className="mt-2 max-w-2xl text-sm text-[#64776e]">Every successful public submission is saved to the database immediately and appears here for review, including the uploaded payment receipt.</p>
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-2">
         <div className="rounded-[2rem] bg-white p-8"><HeartHandshake className="text-[#c56b4b]" /><p className="mt-8 text-4xl font-semibold">{donations.length}</p><p className="mt-2 font-semibold">Donation confirmations</p><p className="mt-1 text-sm text-[#789086]">Payment details and receipts received.</p></div>
