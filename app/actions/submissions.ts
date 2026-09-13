@@ -1,30 +1,22 @@
 'use server'
 import { db } from '@/lib/db'
 import { donations, volunteers } from '@/lib/db/schema'
-import nodemailer from 'nodemailer'
+import { getToken } from '@vercel/connect'
 import { randomUUID } from 'crypto'
 
-const destination = 'bondedfriendsoutreachinitiativ@gmail.com'
-const smtpUser = process.env.GMAIL_SMTP_USER
-const smtpPassword = process.env.GMAIL_SMTP_APP_PASSWORD
-const transporter = smtpUser && smtpPassword ? nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: smtpUser, pass: smtpPassword },
-}) : null
+const telegramConnector = 'api.telegram.org/bonded-friends-notifications'
+const telegramChatId = process.env.TELEGRAM_CHAT_ID
 function clean(value: string) { return value.trim().replace(/[<>]/g, '') }
+function htmlToTelegramText(html: string) { return html.replace(/<br\s*\/?>(\n)?/gi, '\n').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() }
 async function notify(subject: string, html: string, id: string) {
-  if (!transporter || !smtpUser) return 'pending'
+  if (!telegramChatId) return 'pending'
   try {
-    await transporter.sendMail({
-      from: `Bonded Friends Outreach <${smtpUser}>`,
-      to: destination,
-      subject,
-      html,
-      headers: { 'X-Notification-ID': `bonded-friends/${id}` },
-    })
+    const botToken = await getToken(telegramConnector, { subject: { type: 'app' } })
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: telegramChatId, text: `${subject}\n\n${htmlToTelegramText(html)}\n\nNotification ID: ${id}` }) })
+    if (!response.ok) throw new Error(`Telegram returned ${response.status}`)
     return 'sent'
   } catch (error) {
-    console.error('[v0] Gmail notification failed:', error instanceof Error ? error.message : error)
+    console.error('[v0] Telegram notification failed:', error instanceof Error ? error.message : error)
     return 'failed'
   }
 }
