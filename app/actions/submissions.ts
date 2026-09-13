@@ -4,7 +4,7 @@ import { donations, volunteers } from '@/lib/db/schema'
 import { getToken } from '@vercel/connect'
 import { randomUUID } from 'crypto'
 
-const telegramConnector = 'api.telegram.org/bonded-friends-notifications'
+const telegramConnector = 'api.telegram.org/bonded-friends-alerts-new-bot'
 const telegramChatId = process.env.TELEGRAM_CHAT_ID
 function clean(value: string) { return value.trim().replace(/[<>]/g, '') }
 function htmlToTelegramText(html: string) { return html.replace(/<br\s*\/?>(\n)?/gi, '\n').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() }
